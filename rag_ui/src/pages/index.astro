@@ -1,0 +1,22 @@
+---
+import Layout from '../layouts/Layout.astro';
+import QueryForm from '../components/QueryForm';
+import Header from '../components/Header';
+---
+
+<Layout title="RAG Interface">
+    <div class="min-h-screen bg-[url('/images/wallpaper1.png')] bg-cover bg-center bg-no-repeat flex flex-col">
+        <Header />
+        <main class="container mx-auto flex-1 flex items-center justify-center">
+            <QueryForm client:load />
+        </main>
+    </div>
+</Layout>
+
+<style is:global>
+    html, body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+    }
+</style>
