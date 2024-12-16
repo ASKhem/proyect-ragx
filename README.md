@@ -16,6 +16,10 @@ RAG-X es un sistema completo de Recuperación y Generación Aumentada (RAG) que 
 ![Demostración de uso](docs/images/demo.gif)
 *Ejemplo de una consulta y respuesta*
 
+
+## 📓Podemos ver unos ejemplos sencillos en la carpeta notebooks
+[Ver ejemplos en notebooks](notebooks/README.md)
+
 ## 🏗️ Arquitectura del Sistema
 
 El proyecto está dividido en dos componentes principales:
