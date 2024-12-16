@@ -20,14 +20,14 @@ RAG-X es un sistema completo de Recuperación y Generación Aumentada (RAG) que 
 
 El proyecto está dividido en dos componentes principales:
 
-### Frontend (rag-ui/)
+### Frontend (rag_ui/)
 
 - Interfaz de usuario moderna construida con Astro y TypeScript
 - Diseño responsive y accesible
 - Gestión eficiente de estados y consultas
-- [Ver documentación del Frontend](rag-ui/README.md)
+- [Ver documentación del Frontend](rag_ui/README.md)
 
-### Backend (rag-api/)
+### Backend (rag_backend/)
 
 - API RESTful construida con FastAPI
 - Procesamiento de lenguaje natural
