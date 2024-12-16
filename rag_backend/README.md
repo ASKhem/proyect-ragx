@@ -32,14 +32,30 @@ Esta es una API RAG (Retrieval-Augmented Generation) que utiliza el modelo LLM d
 - Pip o Conda
 
 ## 🔧 Instalación
+1. Crear environment
+```bash
+conda create -n ragx python=3.11 
+```
 
-1. Instalar dependencias
+2. Instalar dependencias
 
 ```bash
 pip install -r requirements.txt
 ```
+Si  te da este error:
+```bash
+ERROR: ERROR: Failed to build installable wheels for some pyproject.toml based projects (faiss-cpu)
+```
 
-2. Crear un archivo `.env` en el directorio raíz y agregar las variables de entorno
+Simplemente ejecutar el siguiente comando
+
+```bash
+conda install -c pytorch faiss-cpu
+```
+
+Tardará alrededor de 4 minutos
+
+3. Crear un archivo `.env` en el directorio raíz y agregar las variables de entorno
 
 ```bash
 NVIDIA_API_KEY=tu_api_key_nvidia

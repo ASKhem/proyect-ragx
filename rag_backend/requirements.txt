@@ -1,5 +1,4 @@
 python-multipart
-uvicorn 
 # Core
 openai==1.57.0
 environs==11.2.1
@@ -7,7 +6,8 @@ langchain==0.3.12
 
 # Vector Store and Embeddings
 # faiss-cpu==1.7.2  usar conda install -c pytorch faiss-cpu
-faiss-cpu==1.7.2
+# pytorch
+# faiss-cpu
 sentence-transformers==3.3.1
 
 # Api y Web

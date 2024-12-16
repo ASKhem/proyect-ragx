@@ -40,6 +40,17 @@ npm install
 
 ## 🚀 Ejecutar la Aplicación
 
+Instalar Astro
+
+```bash
+    npm install astro
+```
+Instalar dependencias:
+
+```bash
+    npm install @heroicons/react
+```
+
 Iniciar el servidor de desarrollo
 
 ```bash
