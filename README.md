@@ -22,17 +22,17 @@ El proyecto está dividido en dos componentes principales:
 
 ### Frontend (rag-ui/)
 
-- Interfaz de usuario moderna construida con Next.js y TypeScript
+- Interfaz de usuario moderna construida con Astro y TypeScript
 - Diseño responsive y accesible
 - Gestión eficiente de estados y consultas
-- [Ver documentación del Frontend](./rag-ui/README.md)
+- [Ver documentación del Frontend](rag-ui/README.md)
 
 ### Backend (rag-api/)
 
 - API RESTful construida con FastAPI
 - Procesamiento de lenguaje natural
 - Integración con bases de conocimiento
-- [Ver documentación del Backend](./rag_backend/README.md)
+- [Ver documentación del Backend](rag_backend/README.md)
 
 ## 🚀 Inicio Rápido
 
