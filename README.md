@@ -20,6 +20,39 @@ RAG-X es un sistema completo de Recuperación y Generación Aumentada (RAG) que 
 ## 📓Podemos ver unos ejemplos sencillos en la carpeta notebooks
 [Ver ejemplos en notebooks](notebooks/README.md)
 
+##  🤖 MLL usado:
+llama-3.1-nemotron-70b-instruct
+
+- NVIDIA proporciona una serie de modelos.
+- Nos regala 1000 creditos que sería casi como 5000 respuestas moderadas.
+
+Si quieres buscar otros modelos:
+https://build.nvidia.com/nvidia/llama-3_1-nemotron-70b-instruct
+
+### API:
+
+```bash
+    from openai import OpenAI
+
+    client = OpenAI(
+    base_url = "https://integrate.api.nvidia.com/v1",
+    api_key = "$API_KEY_REQUIRED_IF_EXECUTING_OUTSIDE_NGC"
+    )
+
+    completion = client.chat.completions.create(
+    model="nvidia/llama-3.1-nemotron-70b-instruct",
+    messages=[{"role":"user","content":"Write a limerick about the wonders of GPU computing."}],
+    temperature=0.5,
+    top_p=1,
+    max_tokens=1024,
+    stream=True
+    )
+
+    for chunk in completion:
+    if chunk.choices[0].delta.content is not None:
+        print(chunk.choices[0].delta.content, end="")
+```
+
 ## 🏗️ Arquitectura del Sistema
 
 El proyecto está dividido en dos componentes principales:
