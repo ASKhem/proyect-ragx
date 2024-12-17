@@ -27,18 +27,23 @@ doc_service = DocumentService()
 @app.post("/chat", response_model=ChatResponse)
 async def chat(request: ChatRequest):
     try:
-        logger.info(f"Received chat request with {len(request.messages)} messages")
+        logger.info(f"Recibida solicitud de chat: {request.messages[-1].content[:100]}...")
+        
         response, sources = await llm_service.generate_response(
             messages=request.messages,
             temperature=request.temperature,
             max_tokens=request.max_tokens
         )
+        
+        logger.info(f"Fuentes encontradas: {len(sources)}")
+        logger.info(f"Respuesta generada: {response[:100]}...")
+        
         return ChatResponse(response=response, sources=sources)
     except Exception as e:
-        logger.error(f"Error in chat endpoint: {str(e)}", exc_info=True)
+        logger.error(f"Error en endpoint chat: {str(e)}", exc_info=True)
         raise HTTPException(
-            status_code=500, 
-            detail=f"Internal server error: {str(e)}"
+            status_code=500,
+            detail=f"Error interno del servidor: {str(e)}"
         )
 
 @app.post("/upload", response_model=UploadResponse)
