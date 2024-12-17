@@ -4,9 +4,19 @@ from app.models import ChatRequest, ChatResponse, UploadResponse
 from app.services.llm_service import LLMService
 from app.services.document_service import DocumentService
 import logging
+from contextlib import asynccontextmanager
 
 logger = logging.getLogger(__name__)
-app = FastAPI(title="RAG API", version="1.0.0")
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    global llm_service, doc_service
+    llm_service, doc_service = LLMService(), DocumentService()
+    yield
+    await llm_service.close()
+    await doc_service.close()
+
+app = FastAPI(title="RAG API", version="1.0.0", lifespan=lifespan)
 
 app.add_middleware(
     CORSMiddleware,
@@ -15,9 +25,6 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
-llm_service = LLMService()
-doc_service = DocumentService()
 
 @app.post("/chat", response_model=ChatResponse)
 async def chat(request: ChatRequest):

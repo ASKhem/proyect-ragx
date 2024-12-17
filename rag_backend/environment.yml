@@ -8,17 +8,24 @@ dependencies:
   - pip
   - numpy=1.24.3
   - pip:
-    - python-multipart
+    - python-multipart==0.0.9
     - openai==1.57.0
     - environs==11.2.1
     - sentence-transformers==3.3.1
     - fastapi==0.115.6
     - "uvicorn[standard]==0.20.0"
-    - python-multipart==0.0.9
     - pypdf==5.1.0
     - requests==2.32.3
     - python-dotenv==1.0.0
-    - pymongo==4.9.2
-    - pymongo[srv]
+    - pymongo[srv]==4.9.2
     - transformers>=4.36.2
     - torch>=2.2.0
+    # LangChain y extensiones
+    - langchain==0.1.12
+    - langchain-community==0.0.27
+    - langchain-openai==0.0.8
+    - langchain-huggingface==0.0.12
+    - langchain-mongodb==0.0.1
+    # Logging y monitoreo
+    - structlog==24.1.0
+    - prometheus-client==0.20.0

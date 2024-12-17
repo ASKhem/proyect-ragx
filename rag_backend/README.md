@@ -9,6 +9,9 @@ Una API de Generación Aumentada por Recuperación (RAG) que utiliza el LLM de N
 - 🔍 Búsqueda semántica con MongoDB Vector Search
 - 🚀 API REST con FastAPI
 - 📦 Embeddings con sentence-transformers
+- 🧠 Memoria de conversación con LangChain
+- 🔄 Streaming de respuestas
+- ⚡ Procesamiento asíncrono
 
 ## 🛠️ Tecnologías
 - Python 3.10+
@@ -16,7 +19,8 @@ Una API de Generación Aumentada por Recuperación (RAG) que utiliza el LLM de N
 - MongoDB con Vector Search
 - NVIDIA LLM API (vía cliente OpenAI)
 - Sentence Transformers
-- PyPDF para procesamiento de documentos
+- LangChain
+- PyPDF2 para procesamiento de documentos
 
 ## 📋 Requisitos Previos
 - Python 3.8 o superior
@@ -46,8 +50,18 @@ MONGODB_URL=tu_url_mongodb
 MONGODB_USER=tu_usuario
 MONGODB_PASSWORD=tu_contraseña
 MONGODB_AUTH_SOURCE=admin
+DB_NAME=rag_db
+COLLECTION_NAME=documents
 
 EMBEDDINGS_MODEL=sentence-transformers/all-MiniLM-L6-v2
+VECTOR_SEARCH_INDEX=vector_index
+RETRIEVER_K=3
+
+# Configuraciones opcionales
+CHUNK_SIZE=1000
+CHUNK_OVERLAP=200
+MAX_UPLOAD_SIZE=20971520  # 20MB en bytes
+MONGODB_MAX_POOL_SIZE=50
 ```
 
 ## 🚀 Ejecutar la Aplicación
@@ -59,13 +73,20 @@ uvicorn main:app --host 0.0.0.0 --port 8000
 
 ### 📤 Documentos
 - `POST /upload` - Subir documento PDF
-  - Acepta archivos PDF
+  - Acepta archivos PDF (máx. 20MB)
   - Retorna número de documentos procesados
+  - Segmenta automáticamente el texto
+  - Genera embeddings para búsqueda semántica
 
 ### 💬 Chat
 - `POST /chat` - Consultar al LLM
-  - Acepta mensajes y parámetros de generación
-  - Retorna respuesta y fuentes relevantes
+  - Parámetros:
+    - messages: Lista de mensajes del chat
+    - temperature: Control de creatividad (0-1)
+    - max_tokens: Longitud máxima de respuesta
+  - Retorna:
+    - response: Respuesta generada
+    - sources: Fuentes relevantes utilizadas
 
 ### 🏥 Monitoreo
 - `GET /health` - Verificar estado del servicio
@@ -78,7 +99,7 @@ uvicorn main:app --host 0.0.0.0 --port 8000
 │   ├── models.py           # Modelos Pydantic
 │   └── services/
 │       ├── document_service.py    # Procesamiento de documentos y búsqueda vectorial
-│       └── llm_service.py         # Integración con NVIDIA LLM
+│       └── llm_service.py         # Integración con NVIDIA LLM y LangChain
 └── main.py                 # Punto de entrada y rutas de la API
 ```
 
@@ -88,35 +109,51 @@ uvicorn main:app --host 0.0.0.0 --port 8000
 - Procesamiento de documentos PDF
 - Segmentación de texto
 - Generación de embeddings
-- Búsqueda semántica con MongoDB
+- Búsqueda semántica con MongoDB Vector Search
+- Manejo asíncrono de recursos
 
 #### 📄 `llm_service.py`
 - Integración con NVIDIA LLM API
-- Gestión de contexto
-- Generación de respuestas
+- Gestión de contexto con LangChain
+- Memoria de conversación
+- Streaming de respuestas
+- Recuperación de documentos relevantes
 
-#### 📄 `main.py`
-- Aplicación FastAPI
-- Endpoints de la API
-- Manejo de errores
+#### 📄 `models.py`
+- Validación de datos con Pydantic
+- Modelos para mensajes de chat
+- Modelos para respuestas y subida de archivos
 
 ### 🔄 Flujo de Datos
 1. **Carga de Documentos**
 ```
-PDF → Extraer Texto → Crear Segmentos → Generar Embeddings → Almacenar en MongoDB
+PDF → Extraer Texto → Segmentar → Generar Embeddings → MongoDB Vector Store
 ```
 
 2. **Procesamiento de Consultas**
 ```
-Consulta → Encontrar Documentos Similares → Generar Contexto → Respuesta LLM
+Query → Vector Search → LangChain RAG → Streaming LLM Response
 ```
 
 ## ⚠️ Manejo de Errores
 - ✅ 200: Éxito
-- ❌ 400: Solicitud Incorrecta (ej: archivo inválido)
-- 💥 500: Error Interno del Servidor
+- ❌ 400: Solicitud Incorrecta
+  - Archivo no es PDF
+  - Tamaño excede límite
+  - Parámetros inválidos
+- 💥 500: Error Interno
+  - Error de conexión a MongoDB
+  - Error en procesamiento de PDF
+  - Error en generación LLM
 
 ## 🔒 Consideraciones de Seguridad
 - Autenticación requerida para NVIDIA API
 - Validación de tipos de archivo
+- Límite de tamaño de archivo
 - Conexión segura a MongoDB
+- Manejo seguro de credenciales con variables de entorno
+
+## 🔍 Monitoreo y Logging
+- Logging estructurado
+- Trazabilidad de errores
+- Métricas de procesamiento

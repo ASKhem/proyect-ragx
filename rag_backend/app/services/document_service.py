@@ -4,27 +4,58 @@ from pypdf import PdfReader
 from app.config import settings
 import uuid
 import logging
-import numpy as np
-from typing import List, Dict, Any
-import re
 from io import BytesIO
 
 logger = logging.getLogger(__name__)
 
 class DocumentService:
+    """
+    Servicio para el procesamiento de documentos y búsqueda semántica.
+    
+    Este servicio maneja:
+    - Procesamiento de archivos PDF
+    - Generación de embeddings
+    - Búsqueda semántica en MongoDB
+    """
+
     def __init__(self):
+        """Inicializa el servicio con el modelo de embeddings y conexión a MongoDB."""
         self.embeddings_model = SentenceTransformer(settings.EMBEDDINGS_MODEL)
-        self.client = MongoClient(
-            settings.MONGODB_URL,
-            username=settings.MONGODB_USER or None,
-            password=settings.MONGODB_PASSWORD or None,
-            authSource=settings.MONGODB_AUTH_SOURCE if settings.MONGODB_USER else None
-        )
+        self.client = MongoClient(settings.MONGODB_URL)
+        if settings.MONGODB_USER:
+            self.client = MongoClient(
+                settings.MONGODB_URL,
+                username=settings.MONGODB_USER,
+                password=settings.MONGODB_PASSWORD,
+                authSource=settings.MONGODB_AUTH_SOURCE
+            )
         self.collection = self.client[settings.DB_NAME][settings.COLLECTION_NAME]
 
-    def search_similar(self, query: str, limit: int = 5) -> List[Dict[str, Any]]:
+    async def __aenter__(self):
+        """Método para usar el servicio como context manager."""
+        return self
+
+    async def __aexit__(self, *args):
+        """Limpia recursos al salir del context manager."""
+        await self.close()
+
+    async def close(self):
+        """Cierra las conexiones del servicio."""
+        self.client.close()
+
+    def search_similar(self, query: str, limit: int = 5):
+        """
+        Busca documentos similares a la consulta proporcionada.
+
+        Args:
+            query: Texto de consulta
+            limit: Número máximo de resultados a retornar
+
+        Returns:
+            Lista de documentos similares con su contenido, nombre y puntuación
+        """
         try:
-            query_embedding = self.embeddings_model.encode(query, show_progress_bar=False)
+            query_embedding = self.embeddings_model.encode(query)
             results = self.collection.aggregate([
                 {
                     "$vectorSearch": {
@@ -44,37 +75,45 @@ class DocumentService:
                     }
                 }
             ])
-            return [
-                {
-                    "content": doc.get('content', ''),
-                    "filename": doc.get('filename', 'Unknown source'),
-                    "score": round(float(doc.get('score', 0)), 4)
-                }
-                for doc in results
-                if doc.get('content')
-            ]
+            return [{
+                "content": doc.get('content', ''),
+                "filename": doc.get('filename', 'Unknown source'),
+                "score": round(float(doc.get('score', 0)), 4)
+            } for doc in results if doc.get('content')]
         except Exception as e:
-            logger.error(f"Vector search error: {str(e)}", exc_info=True)
+            logger.error(f"Vector search error: {str(e)}")
             return []
 
-    def process_pdf(self, file, filename: str) -> int:
+    def process_pdf(self, file, filename: str):
+        """
+        Procesa un archivo PDF y almacena su contenido en la base de datos.
+
+        Args:
+            file: Objeto de archivo PDF
+            filename: Nombre del archivo
+
+        Returns:
+            Número de documentos procesados y almacenados
+
+        Raises:
+            ValueError: Si el archivo excede el tamaño máximo
+            Exception: Para otros errores durante el procesamiento
+        """
         try:
-            pdf_content = BytesIO(file.read())
-            pdf_reader = PdfReader(pdf_content)
-            text = " ".join(page.extract_text() for page in pdf_reader.pages)
+            file_content = file.read()
+            if len(file_content) > settings.MAX_UPLOAD_SIZE:
+                raise ValueError(f"File size exceeds maximum limit of {settings.MAX_UPLOAD_SIZE/1024/1024}MB")
             
-            chunks = [chunk for chunk in re.split(r'(?<=[.!?])\s+', text.strip())
-                    if len(chunk.strip()) >= 50]
+            pdf = PdfReader(BytesIO(file_content))
+            text = " ".join(page.extract_text() for page in pdf.pages)
+            chunks = [chunk.strip() for chunk in text.split('.') if len(chunk.strip()) >= 50]
             
-            documents = []
-            for chunk in chunks:
-                embedding = self.embeddings_model.encode(chunk, show_progress_bar=False)
-                documents.append({
-                    "id": str(uuid.uuid4()),
-                    "content": chunk,
-                    "embedding": embedding.tolist(),
-                    "filename": filename
-                })
+            documents = [{
+                "id": str(uuid.uuid4()),
+                "content": chunk,
+                "embedding": self.embeddings_model.encode(chunk).tolist(),
+                "filename": filename
+            } for chunk in chunks]
             
             if documents:
                 self.collection.insert_many(documents, ordered=False)
