@@ -1,0 +1,6 @@
+sentence-transformers
+faiss-cpu
+beautifulsoup4
+pypdf
+requests
+openai

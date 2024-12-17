@@ -18,15 +18,18 @@ RAG-X es un sistema completo de Recuperación y Generación Aumentada (RAG) que 
 
 
 ## 📓Podemos ver unos ejemplos sencillos en la carpeta notebooks
+
 [Ver ejemplos en notebooks](notebooks/README.md)
 
 ##  🤖 MLL usado:
+
 llama-3.1-nemotron-70b-instruct
 
 - NVIDIA proporciona una serie de modelos.
 - Nos regala 1000 creditos que sería casi como 5000 respuestas moderadas.
 
 Si quieres buscar otros modelos:
+
 https://build.nvidia.com/nvidia/llama-3_1-nemotron-70b-instruct
 
 ### API:

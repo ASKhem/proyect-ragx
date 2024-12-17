@@ -43,6 +43,14 @@ Ambos notebooks comparten estas funcionalidades principales:
   - requests
   - openai (para integración con API)
 
+### 📦 Instalación de Dependencias
+
+Para instalar las dependencias, puedes usar el siguiente comando:
+
+```bash
+pip install -r requirements.txt
+```
+
 ## 📝 Uso
 
 1. Instalar las dependencias requeridas si no lo hiciste antes.
