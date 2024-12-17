@@ -16,53 +16,48 @@ Esta es una API RAG (Retrieval-Augmented Generation) que utiliza el modelo LLM d
 
 ## 🛠️ Tecnologías Utilizadas
 
-- 🐍 Python 3.8+
+- 🐍 Python 3.10+
 - ⚡ FastAPI
-- 🍃 MongoDB
-- 🔍 FAISS para búsqueda vectorial
-- 🤖 NVIDIA LLM API
+- 🍃 MongoDB con Vector Search
+- 🤖 NVIDIA LLM API (vía OpenAI client)
 - 🔤 Sentence Transformers
-- 📄 PyPDF para procesamiento de documentos
+- 📄 PyPDF2 para procesamiento de documentos
 
 ## 📋 Requisitos Previos
 
 - Python 3.8 o superior
-- MongoDB
+- MongoDB (con soporte para Vector Search)
 - NVIDIA API Key
 - Pip o Conda
 
 ## 🔧 Instalación
-1. Crear environment
+
+1. Crear y activar el entorno virtual:
+
 ```bash
-conda create -n ragx python=3.11 
+python -m venv venv
+source venv/bin/activate  # En Windows: venv\Scripts\activate
 ```
 
-2. Instalar dependencias
+2. Instalar dependencias:
 
 ```bash
 pip install -r requirements.txt
 ```
-Si  te da este error:
-```bash
-ERROR: ERROR: Failed to build installable wheels for some pyproject.toml based projects (faiss-cpu)
-```
 
-Simplemente ejecutar el siguiente comando
-
-```bash
-conda install -c pytorch faiss-cpu
-```
-
-Tardará alrededor de 4 minutos
-
-3. Crear un archivo `.env` en el directorio raíz y agregar las variables de entorno
+3. Crear un archivo `.env` en el directorio raíz:
 
 ```bash
 NVIDIA_API_KEY=tu_api_key_nvidia
+NVIDIA_BASE_URL=https://integrate.api.nvidia.com/v1
+MODEL_NAME=nvidia/llama-3.1-nemotron-70b-instruct
+
 MONGODB_URL=tu_url_mongodb
 MONGODB_USER=tu_usuario
 MONGODB_PASSWORD=tu_contraseña
 MONGODB_AUTH_SOURCE=admin
+
+EMBEDDINGS_MODEL=sentence-transformers/all-MiniLM-L6-v2
 CACHE_ENABLED=true
 CACHE_MAX_SIZE=1000
 ```
