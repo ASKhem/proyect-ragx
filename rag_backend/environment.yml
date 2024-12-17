@@ -30,3 +30,4 @@ dependencies:
     - pymongo[srv]
     - transformers>=4.36.2
     - torch>=2.2.0
+    - beautifulsoup4==4.12.3

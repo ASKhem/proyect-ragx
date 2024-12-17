@@ -19,9 +19,6 @@ class Settings:
     EMBEDDINGS_MODEL = env.str("EMBEDDINGS_MODEL", "sentence-transformers/all-MiniLM-L6-v2")
     VECTOR_DIMENSIONS = 384
     
-    CACHE_ENABLED = env.bool("CACHE_ENABLED", True)
-    CACHE_MAX_SIZE = env.int("CACHE_MAX_SIZE", 1000)
-    
     CHUNK_SIZE = env.int("CHUNK_SIZE", 1000)
     CHUNK_OVERLAP = env.int("CHUNK_OVERLAP", 200)
     MAX_UPLOAD_SIZE = env.int("MAX_UPLOAD_SIZE", 20 * 1024 * 1024)

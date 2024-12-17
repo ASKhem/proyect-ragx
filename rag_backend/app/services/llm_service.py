@@ -1,19 +1,15 @@
-from openai import OpenAI
+from openai import OpenAI, OpenAIError
 from app.config import settings
 from app.services.document_service import DocumentService
 from app.models import ChatMessage
 import logging
 from typing import Tuple, List, Dict, Any
 
-logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 class LLMService:
     def __init__(self):
-        self.client = OpenAI(
-            base_url=settings.BASE_URL,
-            api_key=settings.API_KEY
-        )
+        self.client = OpenAI(base_url=settings.BASE_URL, api_key=settings.API_KEY)
         self.doc_service = DocumentService()
 
     async def generate_response(
@@ -26,11 +22,21 @@ class LLMService:
             raise ValueError("Messages list cannot be empty")
         
         try:
-            user_query = messages[-1].content
-            relevant_docs = self.doc_service.search_similar(user_query, limit=2)
+            relevant_docs = self.doc_service.search_similar(messages[-1].content, limit=3)
+            
+            context = "\n\n".join(
+                f"From {doc['filename']} (relevance: {doc['score']}):\n{doc['content']}"
+                for doc in relevant_docs
+            )
+            
+            system_message = (
+                "You are an expert assistant. Use ONLY the information from the following context to answer. "
+                "If the information is not in the context, say so clearly.\n\n"
+                f"CONTEXT:\n{context}"
+            )
             
             messages_with_context = [
-                {"role": "system", "content": self._build_system_prompt(relevant_docs)},
+                {"role": "system", "content": system_message},
                 *[{"role": msg.role, "content": msg.content} for msg in messages]
             ]
 
@@ -42,27 +48,14 @@ class LLMService:
                 stream=True
             )
 
-            response_text = ""
-            for chunk in completion:
-                if chunk.choices[0].delta.content:
-                    response_text += chunk.choices[0].delta.content
+            response_text = ''.join(
+                chunk.choices[0].delta.content
+                for chunk in completion
+                if chunk.choices[0].delta.content
+            )
 
             return response_text, relevant_docs
 
         except Exception as e:
-            logger.error(f"Error generating response: {str(e)}")
+            logger.error(f"Response generation error: {str(e)}")
             raise
-
-    @staticmethod
-    def _build_system_prompt(docs: List[Dict[str, Any]]) -> str:
-        context = "\n\n".join(
-            f"De {doc['filename']}:\n{doc['content']}"
-            for doc in docs
-        )
-        
-        return (
-            "Utiliza el siguiente contexto para responder la pregunta del usuario. "
-            "El contexto está organizado por archivos fuente.\n\n"
-            f"{context}\n\n"
-            "Si la respuesta no se encuentra en el contexto, indícalo."
-        )
