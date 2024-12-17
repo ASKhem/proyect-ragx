@@ -29,18 +29,12 @@ Una API de Generación Aumentada por Recuperación (RAG) que utiliza el LLM de N
 
 ## 🔧 Instalación
 
-1. Crear y activar el entorno virtual:
+1. Crear y activar el entorno virtual e Instalar dependencias:
 ```bash
-python -m venv venv
-source venv/bin/activate  # En Windows: venv\Scripts\activate
+conda env create -f environment.yml
 ```
 
-2. Instalar dependencias:
-```bash
-pip install -r requirements.txt
-```
-
-3. Crear archivo `.env` en el directorio raíz:
+2. Crear archivo `.env` en el directorio raíz:
 ```bash
 NVIDIA_API_KEY=tu_api_key_nvidia
 NVIDIA_BASE_URL=https://integrate.api.nvidia.com/v1
