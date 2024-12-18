@@ -45,6 +45,8 @@ docker-compose up -d
 docker-compose logs -f
 ```
 
+**Una vez iniciado los servicios esperar unos 20 segundos a que el backend este listo.**
+
 4. **Verificar el Despliegue**:
 
 - Frontend: http://localhost:4321
