@@ -1,0 +1,16 @@
+numpy==1.24.3
+python-multipart==0.0.9
+openai==1.57.0
+environs==11.2.1
+sentence-transformers==3.3.1
+fastapi==0.115.6
+uvicorn[standard]==0.20.0
+pypdf==3.17.1
+pymongo[srv]==4.9.2
+langchain
+langchain-community
+langchain-openai
+langchain-huggingface
+langchain-mongodb
+structlog
+requests==2.32.3
