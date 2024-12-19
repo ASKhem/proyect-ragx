@@ -73,6 +73,44 @@ CACHE_MAX_SIZE=1000
 PUBLIC_BACKEND_URL=http://localhost:8000
 ```
 
+### Importante
+
+El subir un archivo se creará automaticamente una base de datos y una collection en mongo atlas.
+Dependiendo de la cantidad de documentos tardará mas o menos tiempo tanto en subir los documentos como en indexarlos.
+
+### Configuración de Atlas Search & Vector Search
+
+Para Poder usar Atlas Search & Vector Search debes de configurar manualmente el cluster de mongo atlas.
+
+1. Ir a la seccion Services -> Atlas Search -> Create Search Index
+
+2. Seleccionar Atlas Vector Search JSON editor
+
+3. Seleccionar la collection que quieres indexar el nombre del vector index y el la configuración del vector index.
+
+En mi caso:
+
+- Mi database es rag_db y la collection es documents
+- El nombre del vector index es "vector_index"
+- La configuración del vector index es la siguiente:
+
+```json
+{
+  "fields": [
+    {
+      "type": "vector",
+      "path": "embedding",
+      "numDimensions": 384,
+      "similarity": "cosine"
+    }
+  ]
+}
+```
+
+4. Click en Create Search Index y listo.
+
+Habrá que esperar unos minutos a que se indexe la collection.
+
 ### Solución de Problemas Comunes
 
 1. **Error de Conexión al Frontend**:
