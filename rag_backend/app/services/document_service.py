@@ -5,6 +5,7 @@ from app.config import settings
 import uuid
 import logging
 from io import BytesIO
+from langchain.text_splitter import RecursiveCharacterTextSplitter
 
 logger = logging.getLogger(__name__)
 
@@ -106,17 +107,29 @@ class DocumentService:
             
             pdf = PdfReader(BytesIO(file_content))
             text = " ".join(page.extract_text() for page in pdf.pages)
-            chunks = [chunk.strip() for chunk in text.split('.') if len(chunk.strip()) >= 50]
+            
+            text_splitter = RecursiveCharacterTextSplitter(
+                chunk_size=settings.CHUNK_SIZE,
+                chunk_overlap=settings.CHUNK_OVERLAP,
+                length_function=len,
+                separators=["\n\n", "\n", ".", "!", "?", ",", " ", ""]
+            )
+            
+            chunks = text_splitter.split_text(text)
             
             documents = [{
                 "id": str(uuid.uuid4()),
                 "content": chunk,
                 "embedding": self.embeddings_model.encode(chunk).tolist(),
-                "filename": filename
+                "filename": filename,
+                "chunk_size": len(chunk)
             } for chunk in chunks]
             
             if documents:
                 self.collection.insert_many(documents, ordered=False)
+            
+            logger.info(f"Processed {len(documents)} chunks from {filename}. "
+                    f"Average chunk size: {sum(len(d['content']) for d in documents)/len(documents):.0f} chars")
             
             return len(documents)
         except Exception as e:

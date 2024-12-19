@@ -28,8 +28,8 @@ class Settings:
         self.EMBEDDINGS_MODEL = env.str("EMBEDDINGS_MODEL", "sentence-transformers/all-MiniLM-L6-v2")
         self.VECTOR_DIMENSIONS = 384
         
-        self.CHUNK_SIZE = env.int("CHUNK_SIZE", 1000)
-        self.CHUNK_OVERLAP = env.int("CHUNK_OVERLAP", 200)
+        self.CHUNK_SIZE = env.int("CHUNK_SIZE", 2000)
+        self.CHUNK_OVERLAP = env.int("CHUNK_OVERLAP", 400)
         self.MAX_UPLOAD_SIZE = env.int("MAX_UPLOAD_SIZE", 20 * 1024 * 1024)
         
         self.VECTOR_SEARCH_INDEX = env.str("VECTOR_SEARCH_INDEX", "vector_index")
