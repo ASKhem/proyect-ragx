@@ -64,7 +64,7 @@ Asegúrate de configurar estas variables en tu archivo `.env`:
 ```env
 # Backend Configuration
 NVIDIA_API_KEY=your-nvidia-api-key
-MONGODB_URL=your-mongodb-url
+MONGODB_URL=mongodb+srv://user:password@cluster0.suxm1.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
 MONGODB_USER=your-mongodb-user
 MONGODB_PASSWORD=your-mongodb-password
 MONGODB_AUTH_SOURCE=admin
