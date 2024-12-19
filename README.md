@@ -4,6 +4,11 @@
 
 RAG-X es un sistema completo de Recuperación y Generación Aumentada (RAG) que combina una potente API backend con una interfaz de usuario moderna y accesible. El sistema está diseñado para procesar consultas en lenguaje natural y proporcionar respuestas precisas basadas en fuentes de conocimiento específicas.
 
+## Interfaz de Usuario
+
+![Demostración de uso](docs/images/demo.gif)
+*Ejemplo de una consulta y respuesta*
+
 ## 🎯 Despliegue con Docker Compose
 
 La forma más sencilla de ejecutar el proyecto es usando Docker Compose con las imágenes preconfiguradas.
@@ -111,6 +116,10 @@ En mi caso:
 
 Habrá que esperar unos minutos a que se indexe la collection.
 
+5. Ejemplo completo de la Primera vez usando el programa:
+
+![Demostración de uso](docs/images/ejemploCompleto1.gif)
+
 ### Solución de Problemas Comunes
 
 1. **Error de Conexión al Frontend**:
@@ -124,19 +133,6 @@ Habrá que esperar unos minutos a que se indexe la collection.
 3. **Problemas de Memoria**:
    - Asegúrate de tener al menos 8GB de RAM disponible
    - Verifica los recursos asignados a Docker
-
-## 🎯 Demostración
-
-### Interfaz de Usuario
-
-![Interfaz principal](docs/images/img1.png)
-*Vista principal de la aplicación*
-
-### Flujo de Trabajo
-
-![Demostración de uso](docs/images/demo.gif)
-*Ejemplo de una consulta y respuesta*
-
 
 ## 📓Podemos ver unos ejemplos sencillos en la carpeta notebooks
 
