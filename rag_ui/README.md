@@ -6,23 +6,23 @@ Una interfaz de usuario moderna y responsiva para interactuar con APIs RAG (Retr
 
 ## ⭐ Características
 
-- 💬 Interfaz de chat interactiva
-- 📄 Soporte para carga de documentos PDF
-- ⚡ Streaming de respuestas en tiempo real
-- 🎨 Diseño moderno y responsivo
-- 🌙 Soporte para modo oscuro
-- 🔄 Efectos de animación de escritura
-- 📱 Diseño adaptable a móviles
+- Interfaz de chat interactiva
+- Soporte para carga de documentos PDF
+- Streaming de respuestas en tiempo real
+- Diseño moderno y responsivo
+- Soporte para modo oscuro
+- Efectos de animación de escritura
+- Diseño adaptable a móviles
 
 ## 🛠️ Tecnologías Utilizadas
 
 - 🚀 Astro 5.0
-- ⚛️ React 19
-- 🎨 TailwindCSS
-- 🔤 TypeScript
-- 📝 React Markdown
-- ✨ Resaltado de sintaxis
-- 🎯 Axios para llamadas API
+- ⚛React 19
+- TailwindCSS
+- TypeScript
+- React Markdown
+- Resaltado de sintaxis
+- Axios para llamadas API
 
 ## 📋 Requisitos Previos
 
